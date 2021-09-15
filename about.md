@@ -6,4 +6,4 @@ permalink: /about/
 
 I'm Data pursuing a career in data analytics and machine learning engineering.
 
-email: agus[at]python.web.id
+email: TBD
