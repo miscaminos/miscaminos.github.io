@@ -120,20 +120,23 @@ fpr, tpr, thresholds = roc_curve(y_train_5, y_scores)
 def plot_roc_curve(fpr, tpr, label=None):
     plt.plot(fpr, tpr, linewidth=2, label=label)
     plt.plot([0, 1], [0, 1], 'k--') # 대각 점선
-    plt.axis([0, 1, 0, 1])                                    # Not shown in the book
-    plt.xlabel('False Positive Rate (Fall-Out)', fontsize=16) # Not shown
-    plt.ylabel('True Positive Rate (Recall)', fontsize=16)    # Not shown
-    plt.grid(True)                                            # Not shown
+    plt.axis([0, 1, 0, 1])                                   
+    plt.xlabel('False Positive Rate (Fall-Out)', fontsize=16) 
+    plt.ylabel('True Positive Rate (Recall)', fontsize=16)    
+    plt.grid(True)                                           
 
-plt.figure(figsize=(8, 6))                                    # Not shown
+plt.figure(figsize=(8, 6))                                    
 plot_roc_curve(fpr, tpr)
-fpr_90 = fpr[np.argmax(tpr >= recall_90_precision)]           # Not shown
-plt.plot([fpr_90, fpr_90], [0., recall_90_precision], "r:")   # Not shown
-plt.plot([0.0, fpr_90], [recall_90_precision, recall_90_precision], "r:")  # Not shown
-plt.plot([fpr_90], [recall_90_precision], "ro")               # Not shown
-save_fig("roc_curve_plot")                                    # Not shown
+fpr_90 = fpr[np.argmax(tpr >= recall_90_precision)]          
+plt.plot([fpr_90, fpr_90], [0., recall_90_precision], "r:")   
+plt.plot([0.0, fpr_90], [recall_90_precision, recall_90_precision], "r:")  
+plt.plot([fpr_90], [recall_90_precision], "ro")               
+save_fig("roc_curve_plot")                                    
 plt.show()
 ```
+output:
+
+![amazon-rds 1](https://raw.githubusercontent.com/agusmakmun/agusmakmun.github.io/master/static/img/_posts/classification_ROC.png)
 
 ```
 from sklearn.metrics import roc_auc_score
