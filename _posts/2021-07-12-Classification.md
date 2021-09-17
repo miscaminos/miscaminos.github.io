@@ -136,7 +136,7 @@ plt.show()
 ```
 output:
 
-![amazon-rds 1](https://raw.githubusercontent.com/agusmakmun/agusmakmun.github.io/master/static/img/_posts/classification_ROC.png)
+![classification_ROC](https://raw.githubusercontent.com/miscaminos/miscaminos.github.io/master/static/img/_posts/classification_ROC.png)
 
 ```
 from sklearn.metrics import roc_auc_score
