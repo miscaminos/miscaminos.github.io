@@ -4,9 +4,11 @@ title: "Classification"            # (require) a string title
 date: 2021-07-12       									# (require) a post date
 categories: [machineLearning]   # (custom) some categories, but makesure these categories already exists inside path of `category/`
 tags: [MLProject]           	# (custom) tags only for meta `property="article:tag"`
+---
+
+Hands on Machine Learning(chapter03)
 
 # Classification
-## Hands on Machine Learning(chapter03)
 
 Handwritten numbers data set from MNIST를 사용해서 숫자 classification을 수행해본다.
 
@@ -26,7 +28,7 @@ y.shape
 y의 shape은 (70000, )임으로 7만개의 sample의 target값을 가지고 있다.
 
 
-### 1. binary classification (이진분류)
+## 1. binary classification (이진분류)
 
 실습에서는 '5-감지기'를 만들어서 이진분류 모델을 사용한다. (기존 MNIST data set에서 5에 해당하는 target값만 따로 추출해서 target vector를 생성하면 됨)
 
