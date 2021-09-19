@@ -1,12 +1,15 @@
 ---
 layout: post           									# (require) default post layout
-title: "Classification"            # (require) a string title
+title: "Classification"                                 # (require) a string title
 date: 2021-07-12       									# (require) a post date
 categories: [machineLearning]   # (custom) some categories, but makesure these categories already exists inside path of `category/`
 tags: [MLProject]           	# (custom) tags only for meta `property="article:tag"`
 ---
 
+
+
 Hands on Machine Learning(chapter03)
+
 
 # Classification
 
