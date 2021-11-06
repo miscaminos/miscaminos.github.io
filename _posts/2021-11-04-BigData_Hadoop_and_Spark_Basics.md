@@ -2,7 +2,7 @@
 layout: post           									# (require) default post layout
 title: "Big Data Analytics II"            # (require) a string title
 date: 2021-11-04       									# (require) a post date
-categories: [BigDataProcessing   # (custom) some categories, but makesure these categories already exists inside path of `category/`
+categories: [BigDataProcessing]   # (custom) some categories, but makesure these categories already exists inside path of `category/`
 tags: [BigDataAnalytics]           	# (custom) tags only for meta `property="article:tag"`
 
 ---
