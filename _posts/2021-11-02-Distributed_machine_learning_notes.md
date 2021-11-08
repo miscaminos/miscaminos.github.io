@@ -179,7 +179,7 @@ Algorithm이 어떤 method를 통해 새로운 데이터를 기반으로 학습�
 
 공통적인 machine learning architecture design: 
 
-![general_overview](C:\Innowireless\study\images\general_overview_ML.PNG)
+![general_overview](https://raw.githubusercontent.com/miscaminos/miscaminos.github.io/master/static/img/_posts/general_overview_ML.PNG)
 
 Machine learning 문제는 training phase와 prediction phase로 나눌 수 있다. 위 그림과 같이, training phase에서 ML model은 training data의 기반과 hyperparameter tuning을 통해서 최적화 된다. 그리고 훈련된 model은 prediction phase에서 deploy되어서 새롭게 system에 input되는 data를 사용하여 prediction을 만들어 낸다. 
 
@@ -219,7 +219,7 @@ Distributed machine learning system에는 두 가지 병렬 방식이 존재한�
 
    Model의 layer를 나누어서 각 node에 distribute됨.
 
-![parallelism](C:\Innowireless\study\images\parallelism.png)
+![parallelism](https://raw.githubusercontent.com/miscaminos/miscaminos.github.io/master/static/img/_posts/parallelism.png)
 
 
 
@@ -233,11 +233,11 @@ Data set을 partition으로 나누어서 진행하는 방식이다. Compute clus
 
 Data parallel방식에서는 각 worker node(각 device/machine)가 training sample을 위한 예측값과 labeled output사이의 error를 독립적으로 계산하기때문에 각 node는 각자 얻은 모든 changes를 다른 모든 nodes들의 models에 모두 전송해야 한다. 그래서 worker node는 batch computation의 끝에서 model parameters (또는 gradients)를 synchronize해서 지속적으로 일관적인(consistent한) model이 훈련될 수 있도록 해야한다. (ML algorithm이 single processor에서 운용되는 것과 같이 consistency가 보장되도록 해야한다.) 
 
-![data_parallelism](C:\Innowireless\study\images\data_parallelism_microsoft.PNG)
+![data_parallelism](https://raw.githubusercontent.com/miscaminos/miscaminos.github.io/master/static/img/_posts/data_parallelism_microsoft.PNG)
 
 다음 그림과 같이 전체 model이 multiple node들에게 deploy되고, data는 horizontally split되어 공유되었다. model의 각 instance가 한 data subset를 기반으로 훈련된다.
 
-![data_parallelism2](C:\Innowireless\study\images\data_parallelism_tds.PNG)
+![data_parallelism2](https://raw.githubusercontent.com/miscaminos/miscaminos.github.io/master/static/img/_posts/data_parallelism_tds.PNG)
 
 Data parallel방식이 진행되는 형태를 순서대로 표현하자면, 다음과 같이 distributed가 아닌 기존 방식의 training을 batches로 진행하는 것과 비슷하다.
 
@@ -276,7 +276,7 @@ Model parallelism을 쉽게 그림으로 표현한 diagram은 다음과 같다.
 
 Model의 layer (또는 group of layers)가 각각의 node에 deploy되고, data는 전체 data set이 각 node에 copy된다. 즉, model의 부분적인 layer를 받은 각각의 node가 전체 dataset으로 훈련된다. 
 
-![model_parallelism](C:\Innowireless\study\images\model_parallelism_tds.PNG)
+![model_parallelism](https://raw.githubusercontent.com/miscaminos/miscaminos.github.io/master/static/img/_posts/model_parallelism_tds.PNG)
 
 Model  parallelism requires special care, because model parameters do  not always enjoy this convenient i.i.d.(independent and identically distributed) assumption therefore,  which parameters are updated in parallel, as well as the order in  which the updates happen, can lead to a variety of outcomes.
 
@@ -295,7 +295,7 @@ Model  parallelism requires special care, because model parameters do  not alway
 
 다음과 같이 data & model parallel 방식이 함께 simultaneous execution이 가능하다. space of data samples and model parameters를 disjoint blocks로 partition하면서 가능해진다. e.g.,the LDA topic model Gibbs sampling equation can be partitioned in such a block-wise manner, in order to achieve near-perfect speed up with multiple machines.
 
-![data_model_parallel](C:\Innowireless\study\images\simultaneous_data_model_parallelism.PNG)
+![data_model_parallel](https://raw.githubusercontent.com/miscaminos/miscaminos.github.io/master/static/img/_posts/simultaneous_data_model_parallelism.PNG)
 
 
 
@@ -311,7 +311,7 @@ Nodes distribution scheme은 크게 두 가지 방식으로 구분된다.
 
 아래 그림은 parallel SGD(in data parallelism) 가 parameter server를 사용할때에 algorithm이 workers(servers)에게 model을 broadcast하는 단계부터 시작한다. Each worker reads its own split from the mini-batch in each training iteration, computing its own gradients, and sending those gradients to one or more parameter servers. The parameter servers aggregate all the gradients from the workers and wait until all workers have completed before they calculate the new model for the next iteration, which is then broadcasted to all workers.
 
-![centralized](C:\Innowireless\study\images\centralized.png)
+![centralized](https://raw.githubusercontent.com/miscaminos/miscaminos.github.io/master/static/img/_posts/centralized.png)
 
 #### Decentralized(peer-to-peer활용)
 
@@ -319,7 +319,7 @@ De-centralized 방식으로는 각각의 node가 다른 모든 node들과 직접
 
 parallel SGD(in data parallelism)의 경우 다음 그림과 같이 decentralized scheme을 사용한다. 이때 ring-allreduce방식에 의존하여 nodes들간의 parameter updates를 communicate한다. ring-allreduce architecture에는 workers로 부터 gradients를 aggregate하는 central server가 부재인 대신에, 각 training iteration에서 each worker read its own split for a mini-batch, calculates its gradients, sends it gradients to its successor neighbor on the ring, and receives gradients from its predecessor neighbor on the ring.
 
-![decentralized](C:\Innowireless\study\images\decentralized.png)
+![decentralized](https://raw.githubusercontent.com/miscaminos/miscaminos.github.io/master/static/img/_posts/decentralized.png)
 
 Decentralized scheme으로 centralized scheme대비 performance를 향상시킨 cases:
 
@@ -381,7 +381,7 @@ Synchronous와 asynchronous 두 가지 방법 모두 centralized 또는 decentra
 
 LSGD partitions computing resources into subgroups that each contain a communication layer (communicator) and a computation layer (worker). Each subgroup has centralized communication for parameter updates while communication between subgroups is handled by communicators. As a result, communication time is overlapped with I/O latency of workers. The efficiency of the algorithm is tested by training a deep network on the ImageNet classification task.
 
-![LSGD_topology](C:\Innowireless\study\images\LSGD_topology.PNG)
+![LSGD_topology](https://raw.githubusercontent.com/miscaminos/miscaminos.github.io/master/static/img/_posts/LSGD_topology.PNG)
 
 현실적으로 synchronous 방식은 32~50 nodes규모의 model에 주로 사용되고 그 이상으로 더 큰 cluster 또는 heterogeneous environment를 위해서는 asynchronous방식이 사용된다. (according to survey:https://arxiv.org/pdf/1802.09941.pdf)
 
@@ -395,7 +395,7 @@ Node간의 communication과 parameter updates 방식으로 distribution의 degre
 
 4단계의 degrees of distribution으로 구분할 수 있다: centralized(ensembling), decentralized as tree, decentralized with parameter server, fully distributed.
 
-![topology](C:\Innowireless\study\images\Distributed_ML_topologies.PNG)
+![topology](https://raw.githubusercontent.com/miscaminos/miscaminos.github.io/master/static/img/_posts/Distributed_ML_topologies.PNG)
 
 상세 설명:
 
@@ -464,7 +464,7 @@ parallel programs에서는 worker machine들 간의 exchange program이 요구�
 
 BSP방식은 다음 그림과 같이 computation과 communication phase사이의 clean separation을 형성한다. BSP 방식에서는 worker machine들에게 다음 synchronization에 도달하기 전까지는 각 machine의 computation phase가 보이지 않는다. 
 
- ![BSP](C:\Innowireless\study\images\BSP.PNG)
+ ![BSP](https://raw.githubusercontent.com/miscaminos/miscaminos.github.io/master/static/img/_posts/BSP.PNG)
 
 BSP방식을 따르는 ML program들은 serializable하다. 즉, sequential ML program과 동일하다는 것을 의미한다. serializable BSP ML program들은 correctness가 guarantee되어있다. 
 
@@ -480,7 +480,7 @@ consistency를 보장하는 가장 심플한 model이다. 각각의 computation�
 
 BSP와는 다르게 worker machine이 다른 machine들을 기다려주지 않는다. 각 iteration마다 model information을 communicate한다. Asynchronous execution은 보통 near-ideal P-fold increase in iteration throughput을 확보하지만, convergence progress per iteration은 감소한다. 이 방식에서는 machine들이 서로를 기다려주지 않기때문에 공유되는 model information이 delay되거나 stale되어서 computation에 error을 발생시키는 문제가 발생한다. 이 error를 제한하기위해 delays는 정교하게 bound되어야한다. 
 
-![Asynchronous](C:\Innowireless\study\images\ASP.PNG)
+![Asynchronous](https://raw.githubusercontent.com/miscaminos/miscaminos.github.io/master/static/img/_posts/ASP.PNG)
 
 **장점:** 속도. 빠르다. worker들이 기다림 없이 병렬로 communicate할 수 있다. 이 방식으로 가장 빠른 speedup을 얻을 수 있다는 것이 장점이다.
 
@@ -512,7 +512,7 @@ General purpose와는 반대의 방향에는 purpose-built machine learning libr
 
 아얘 처음부터 distributed machine learning을 위해 설계되고 만들어진 specific algorithm과 operational model이 distributed ML ecosystem의 중심에 있다. e.g., Distributed Ensemble Learning, Parallel Synchronous Stochastic Gradient Descent (SGD), 또는 Parameter Servers. 원래 대부분의 system들은 user 또는 on-premise로 운용(operate)되도록 의도되어왔으나, 점점 더 많고 다양한 machine learning services가 cloud delivery model을 통해 공급되고 있다. 이들은 established distributed machine learning system을 중심에 두고 surrounding platform으로 인해 개선되고있으며 해당 기술/technology가 data scientist나 결정권자들에게 더 쉽게 사용할 수 있도록 만들어가고 있다.
 
-![DistributedML_Ecosystem](C:\Innowireless\study\images\DistributedML_Ecosystem.PNG)
+![DistributedML_Ecosystem](https://raw.githubusercontent.com/miscaminos/miscaminos.github.io/master/static/img/_posts/DistributedML_Ecosystem.PNG)
 
 
 
@@ -570,7 +570,7 @@ abstracted parallelization - 알아서 분산 processing을 처리한다. (data 
 
 Apache Spark core build:
 
-![Apache_Spark](C:\Innowireless\study\images\ApacheSpark_ecosystem.PNG)
+![Apache_Spark](https://raw.githubusercontent.com/miscaminos/miscaminos.github.io/master/static/img/_posts/ApacheSpark_ecosystem.PNG)
 
 
 libraries- Spark SQL, Spark streaming, MLlib, GraphX, Spark-NLP, 등이 있음.
@@ -629,7 +629,7 @@ Horovod는 Baidu의 algorithm을 활용한다 - average gradients and communicat
 
 다음 그림과 같이 ring-allreduce algorithm을 통해서 worker node들이 gradient들의 average를 구하고 parameter server를 통한 centralized scheme의 필요 없이 이들을 모든 node들에게 disperse한다. 
 
-![Horovod](C:\Innowireless\study\images\ring_allreduce.png)
+![Horovod](https://raw.githubusercontent.com/miscaminos/miscaminos.github.io/master/static/img/_posts/ring_allreduce.png)
 
 위와 같은 ring-allreduce algorithm에서는 N개의 node들이 각각 두 개의 peers와 2*(N-1)번 communicate한다. 이 communication을 하는 동안, 각 node가 chunks of data buffer를 send & receive한다. 첫 N-1 iterations에서는, 받은 value들이 node의 buffer에 있는 values들에 더해진다. 두번째 N-1 iterations에서는, node의 buffer에 hold된 value들을 received value들이 replace한다. 이 algorithm은 bandwidth-optimal하다. 즉, buffer가 적당하게 크다면 사용가능한 network을 최적의 조건으로 활용할 수 있다.
 
@@ -651,7 +651,7 @@ Horovod Timeline을 사용해서 training job동안 각 time step에서 각 node
 
 이 Horovod-focused profiling tool은 Chrome의 "about:tracing" trace event profiling viewer와 compatible하다. Users can enable timelines by setting a single environment variable and can view the profiling results in the browser through ```chrome://tracing```. 
 
-![HorovodTimeline](C:\Innowireless\study\images\HorovodTimeline.png)
+![HorovodTimeline](https://raw.githubusercontent.com/miscaminos/miscaminos.github.io/master/static/img/_posts/HorovodTimeline.png)
 
 ##### Caffe2
 
@@ -769,7 +769,7 @@ Distributed machine learning approaches중 한 종류로 federated learning방�
 
 Training data를 mobile devices에 distributed된 상태로 두고 locally computed updates를 통해서 shared model의 학습을 진행하는 방식이 federated learning이다. (loose federation of participating devices that are coordinated by central server) 즉, mobile phone들이 current model을 download하고 training data를 (cloud에 저장하지않고) mobile edge device에 둔 상태에서 공유된 ML model/ prediction model을 collaboratively 학습하는것이다. (그래서 federated learning을 collaborative learning이라고 부르기도 함) Mobile device에서 학습을 통해 얻은 small focused update는 encrypted communication을 통해 cloud로 전송되고 공유되었던 모델을 개선하기위해 다른 updates들과 함께 average된다.  
 
-![FL_intro](C:\SJL\스터디_분산ML_system\FL_intro.PNG)
+![FL_intro](https://raw.githubusercontent.com/miscaminos/miscaminos.github.io/master/static/img/_posts/FL_intro.PNG)
 
 개인정보와 같이 sensitive한 data나 또는 large size의 data로 machine learning model training을 진행할때에 여러 문제를 마주치게된다. 개인정보 관련 책임 및 규제 또는 기술적 제한으로 sensitive data의 transfer 및 storage와 large scale dataset의 IID(independently and identically distributed) 확보가 어렵다. 
 
@@ -783,7 +783,7 @@ Training data를 mobile devices에 distributed된 상태로 두고 locally compu
 
 (users' data are encrypted with a key that the server doesn't have)
 
-![encrypted](C:\SJL\스터디_분산ML_system\encrpyted.PNG)
+![encrypted](https://raw.githubusercontent.com/miscaminos/miscaminos.github.io/master/static/img/_posts/encrpyted.PNG)
 
 Google Research의 Federated Learning 담당하는 팀에서는 Google keyboard인 "Gboard"를 통해 federated learning방식을 도입해보고있다.
 
@@ -791,7 +791,7 @@ Gboard란? Gboard가 추천 query를 보여주면, mobile phone이 current conte
 
  
 
-![snippet](C:\SJL\스터디_분산ML_system\snippet.gif)
+![snippet](https://raw.githubusercontent.com/miscaminos/miscaminos.github.io/master/static/img/_posts/snippet.gif)
 
 #### McMahan의 Federated Averaging Algorithm
 
@@ -835,3 +835,24 @@ communication cost - federated optimization에서는 computation 보다는 commu
 
 - increased parallelism: use more clients working independently between each communication rounds
 - increased computation on each client: rather than performing a simple computation like a gradient calculation, each client perform a more complex calculation between each communication rounds
+
+## References
+@misc{verbraeken2019survey,
+      title={A Survey on Distributed Machine Learning}, 
+      author={Joost Verbraeken and Matthijs Wolting and Jonathan Katzy and Jeroen Kloppenburg and Tim Verbelen and Jan S. Rellermeyer},
+      year={2019},
+      eprint={1912.09789},
+      archivePrefix={arXiv},
+      primaryClass={cs.LG}
+}
+
+@misc{xing2015strategies,
+      title={Strategies and Principles of Distributed Machine Learning on Big Data}, 
+      author={Eric P. Xing and Qirong Ho and Pengtao Xie and Wei Dai},
+      year={2015},
+      eprint={1512.09295},
+      archivePrefix={arXiv},
+      primaryClass={stat.ML}
+}
+
+https://federated.withgoogle.com/
