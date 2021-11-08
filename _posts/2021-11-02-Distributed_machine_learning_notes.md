@@ -53,7 +53,7 @@ Distributed training 방식은 기존 traditional machine learning models의 훈
 
 아래 그래프를 보면, computer performance의 발전(회색), specialized hardware (e.g., GPU and other ASIC as TPU)의 발전 (초록색), multi-GPU server(주황색)으로 computation demand에 맞추어왔지만, 실제 hardware performance와 demand사이의 차이(빨간색)가 매꾸어지지 못하고 더 벌어지고있다. Computer performance는 Moore's law가 한계에 도달하면서 더디게 증가하게 되었지만, 그럼에도 불구하고 지속적으로 증가하는 computation demands를 meet하고 미래의 AI model에게 필요한 training을 수행하려면(초거대 AI), 병렬방식을 통하는 것이 유리하다.
 
-![HPC_needs_trends](C:\Innowireless\study\images\trend_of_highperformancecomputing.png)
+![HPC_needs_trends](https://raw.githubusercontent.com/miscaminos/miscaminos.github.io/master/static/img/_posts/trend_of_highperformancecomputing.png)
 
 ### Large scale computation 
 
