@@ -1,3 +1,15 @@
+---
+layout: post           									# (require) default post layout
+title: "Distributed Machine Learning III"            # (require) a string title
+date: 2021-11-09       									# (require) a post date
+categories: [DistributedML]   # (custom) some categories, but makesure these categories already exists inside path of `category/`
+tags: [DistributedML]           	# (custom) tags only for meta `property="article:tag"`
+
+---
+
+Distributed Machine Learning
+
+
 ## Principles & 전략 of ML system design
 
 Large scale에서 수행 속도를 높히기 전에 먼저 ML algorithms이 가진 unique properties의 이해가 필요하다. 
