@@ -111,7 +111,7 @@ Parallel ML을 위한 system interface가 다음과 같은 역할을 수행하�
 
   This clock() is analogous to BSP’s  synchronization barrier, but is different in that updates from one  worker do not need to be immediately communicated to other  workers—as a consequence, workers may proceed even if they  have only received a partial subset of the updates. This means that the local views of A can become stale, if some updates have not been received yet.)
 
-  ![SSP](C:\SJL\스터디_분산ML_system\figures\SSP.PNG)
+  ![SSP](https://raw.githubusercontent.com/miscaminos/miscaminos.github.io/master/static/img/_posts/SSP.PNG)
 
   SSP를 구현할때에 다음과 같은 bounded staleness condition들이 존재한다:
 
@@ -181,21 +181,21 @@ Machine들간에 data를 spread하고 exchange되는 data량을 절약하기위�
 
   Model parameter들을 store하는 두 가지 paradigm이 존재한다:
 
-  ![](C:\SJL\스터디_분산ML_system\figures\centralized_decentralized_parameter_storage.PNG)
+  ![](https://raw.githubusercontent.com/miscaminos/miscaminos.github.io/master/static/img/_posts/centralized_decentralized_parameter_storage.PNG)
 
   - centralized storage:
 
-    ![master_slave_topology](C:\SJL\스터디_분산ML_system\figures\master-slave_nework_topology.PNG)
+    ![master_slave_topology](https://raw.githubusercontent.com/miscaminos/miscaminos.github.io/master/static/img/_posts/master-slave_nework_topology.PNG)
 
   - decentralized storage:
 
-    ![P2P_network_topology](C:\SJL\스터디_분산ML_system\figures\P2P_network_topology.PNG)
+    ![P2P_network_topology](https://raw.githubusercontent.com/miscaminos/miscaminos.github.io/master/static/img/_posts/P2P_network_topology.PNG)
 
     P2P network에서는 all worker들이 각자 communicate하기때문에 O(P^2) message가 전송되어 master-slave topology에서의 O(P)보다 훨씬 더 많은 message가 전송되어 보이지만, P2P network에서 update가 compact 또는 compressible structure이여서 low rank matrix로 compress한후 represent하는 방식으로 communicate된다면 master-slave보다도 더 작은 message로 communication이 가능해진다. (master-slave may not admit compression (because the messages consist of the actual parameters, not the compressible updates))
 
   - Halton sequence:
 
-    ![Halton_topology](C:\SJL\스터디_분산ML_system\figures\Halton_network_topology.PNG)
+    ![Halton_topology](https://raw.githubusercontent.com/miscaminos/miscaminos.github.io/master/static/img/_posts/Halton_network_topology.PNG)
 
     Workers can reach any other worker by routing  messages through intermediate nodes. For example, the routing  path 1→2→5→6 is one way to send a message from worker 1 to  worker 6. The intermediate nodes can combine messages meant for  the same destination, thus reducing the number of messages per  iteration (and further reducing network load). However, one drawback to the Halton sequence topology is that routing increases the  time taken for messages to reach their destination, which raises the  average staleness of parameters under the SSP bridging model.(For  example, the message from worker 1 to worker 6 would be three  iterations stale.)
 
