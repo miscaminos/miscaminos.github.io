@@ -29,7 +29,7 @@ parallel processing = problem을 set of executable instructions로 쪼갠다. �
 
 instruction들이 separate execution node들에서 실행되기때문에, error가 발생한다면 해당 부분의 error를 해결하고 그대로 진행하면된다. node들이 다른 nodes로 부터 locally independent하기 때문에 가능하다.
 
-![linear_vs_parallel](C:\SJL\스터디_분산ML_system\linear_vs_parallel_processing.PNG)
+![linear_vs_parallel](https://raw.githubusercontent.com/miscaminos/miscaminos.github.io/master/static/img/_posts/linear_vs_parallel_processing.PNG)
 
 #### parallel processing 장점:
 
@@ -46,17 +46,17 @@ overflow of data를 manage, store, process하기위한 techniques
 
 하나의 node내에서 capacity 증가 diagram:
 
-![vertical_Scaling](C:\SJL\스터디_분산ML_system\vertical_scaling.PNG)
+![vertical_Scaling](https://raw.githubusercontent.com/miscaminos/miscaminos.github.io/master/static/img/_posts/vertical_scaling.PNG)
 
 Single node의 capacity를 증가시키는 전략보다 더 좋은 방법은 horizontal scaling이다. 
 
 추가적으로 additional nodes를 더한다. 이렇게 형생된 Individual nodes를 합해서 computing cluster이라고 부른다. 이 computing cluster는 "embarrassingly parallel" calculation을 처리할 수 있다. these are kind of workloads that can easily be divided and run independent of one another. 
 
-![parallel_scaling](C:\SJL\스터디_분산ML_system\horizontal_scaling.PNG)
+![parallel_scaling](https://raw.githubusercontent.com/miscaminos/miscaminos.github.io/master/static/img/_posts/horizontal_scaling.PNG)
 
 만약 one process가 fail한다면, 다른 process들에게는 영향을 끼치지않고 이어서 진행될 수 있다.
 
-![not_s_easy](C:\SJL\스터디_분산ML_system\not_so_easy_parallel.PNG)
+![not_s_easy](https://raw.githubusercontent.com/miscaminos/miscaminos.github.io/master/static/img/_posts/not_so_easy_parallel.PNG)
 
 horizontal scaling 으로 parallel 방식을 구현하다보면 "not so easy" 문제를 직면할 때도 있다. multiple computation들이 함께 coordinate해야한다. 하나의 process가 각자의 process를 완료하려면 다른 proces들의 처리 내용/상태를 먼저 인지해야하는 경우가 있다. 이런 경우 network선상으로 서로에게 message를 주고받거나 cluster내의 모든 process들이 access할 수 있는 file system에 message를 쓴다. 
 
@@ -72,7 +72,7 @@ fault tolerance의 활용 예시:
 
 다음 그림과 같이 P1,P2,P3가 들어있는 맨 왼쪽의 1st node에 문제가 생기면, 그림의 맨 오른쪽 node를 새로 생성한 뒤, 다른 node에 copy해두었던 processes들(P1,P2,P3)을 새로운 node에 1st node와 동일하게 확보해서 전체 흐름을 이어갈 수 있다. (Clearly, this is an extraordinarily complex maintenance process, but the Hadoop filesystem is a robust and time-tested framework. It can be reliable to five 9's (99.999%))
 
- ![fault_tol](C:\SJL\스터디_분산ML_system\fault_tolerance.PNG)
+ ![fault_tol](https://raw.githubusercontent.com/miscaminos/miscaminos.github.io/master/static/img/_posts/fault_tolerance.PNG)
 
 ### Big Data Tools and Ecosystem
 
@@ -159,7 +159,7 @@ distributed computing = group of computers or processors working together behind
 
 이 두개의 terms can be used interchangeably, BUT! how they access memory is different. 
 
-![parallel_vs_distributed](C:\SJL\스터디_분산ML_system\parallel_vs_distributed.PNG)
+![parallel_vs_distributed](https://raw.githubusercontent.com/miscaminos/miscaminos.github.io/master/static/img/_posts/parallel_vs_distributed.PNG)
 
 parallel computing shares memory while distributed computing have their own memory
 
@@ -205,7 +205,7 @@ Apache Spark은 read/write을 반복적으로 많이하지않고 대부분의 da
 
 Apache Spark for data engineering & machine learning:
 
-![libraries](C:\SJL\스터디_분산ML_system\ApacheSpark.PNG)
+![libraries](https://raw.githubusercontent.com/miscaminos/miscaminos.github.io/master/static/img/_posts/ApacheSpark.PNG)
 
 Apache Spark은 functional programming의 lambda functions을 사용한다. 이를 통해서 big data를 처리하는 workload를 worker node들에게 distribute하고 parallelized computation을 구현한다.
 
@@ -221,11 +221,11 @@ Apache Spark는 Scala로 주로 쓰여진다. function을 first-class citizen으
 
 간단한 예를 들어보면 다음과 같이 element에 1을 증가시키는 function을 구현한다:
 
-![FP_Example](C:\SJL\스터디_분산ML_system\FP_simple_example.PNG)
+![FP_Example](https://raw.githubusercontent.com/miscaminos/miscaminos.github.io/master/static/img/_posts/FP_simple_example.PNG)
 
 functional programming capabilities를 parallelization로 적용해서 다음과 같이 program이나 code의 수정 없이 you can scale the algorithm to any size by adding more compute and resources. 전체 computation을 그림과 같이 세개의 chunks로 나누어서 진행함으로서 function runs three times in parallel. (the result is the same as if the function exists on only a single node) 
 
-![FP_parallel](C:\SJL\스터디_분산ML_system\FP_parallel.PNG)
+![FP_parallel](https://raw.githubusercontent.com/miscaminos/miscaminos.github.io/master/static/img/_posts/FP_parallel.PNG)
 
 Functional programming applies mathematical concept called lambda calculus.(lambda - every calculation can be expressed as anonymous function which is applied to a data set)
 
@@ -239,13 +239,13 @@ RDD: Resilient Distributed Datasetes는 Spark의 primary data abstraction이다.
 
 RDD는 text, sequence files, Avro, Parquet and Hadoop input format tile types를 지원한다. 또한, local, Cassandra, H Base, HDFS, Amazon S3 그리고 다른 relational & noSQL databases의 file format을 지원한다. 
 
-![RDD_supportedfiles](C:\SJL\스터디_분산ML_system\RDD_supported_files.PNG)
+![RDD_supportedfiles](https://raw.githubusercontent.com/miscaminos/miscaminos.github.io/master/static/img/_posts/RDD_supported_files.PNG)
 
 ##### methods to create RDD:
 
 1. create an RDD using an external or local file from a Hadoop supported file system (e.g., HDFS, Cassandra, HBase or Amazon S3)
 
-   ![RDD_Create](C:\SJL\스터디_분산ML_system\RDD_create_Spark.PNG)
+   ![RDD_Create](https://raw.githubusercontent.com/miscaminos/miscaminos.github.io/master/static/img/_posts/RDD_create_Spark.PNG)
 
    Dataset is broken into partitions and partitions are each stored in a worker's memory.
 
@@ -257,7 +257,7 @@ RDD는 text, sequence files, Avro, Parquet and Hadoop input format tile types를
 
    - Spark는 자동으로 number of partition을 set하려고하지만, 수동으로도 partition을 설정할 수 있다.(by passing the number as a second parameter to the parallelize function)
 
-   ![RDD_parallel](C:\SJL\스터디_분산ML_system\RDD_create_snippet.PNG)
+   ![RDD_parallel](https://raw.githubusercontent.com/miscaminos/miscaminos.github.io/master/static/img/_posts/RDD_create_snippet.PNG)
 
 3. apply transformation on an existing RDD to create a new RDD
 
@@ -267,7 +267,7 @@ RDD와 parallel programming: RDD를 어떻게 만들었냐에 따라서 RDD can 
 
 RDD가 어떻게 parallel programming을 enable하는지 예시:
 
-![RDD_parallel](C:\SJL\스터디_분산ML_system\RDD_parallel.PNG)
+![RDD_parallel](https://raw.githubusercontent.com/miscaminos/miscaminos.github.io/master/static/img/_posts/RDD_parallel.PNG)
 
 RDD는 immutability와 caching을 통해서 Spark에 resilience 특성을 제공한다. 
 
@@ -280,7 +280,7 @@ RDD는 immutability와 caching을 통해서 Spark에 resilience 특성을 제공
 
 Apache Spark consists of 3 main components:
 
-![components](C:\SJL\스터디_분산ML_system\Apache_spark_components.PNG)
+![components](https://raw.githubusercontent.com/miscaminos/miscaminos.github.io/master/static/img/_posts/Apache_spark_components.PNG)
 
 - Data Storage : loads data from data storage into memory. Any Hadoop compatible data source 가능
 - Compute Interface : high-level programming APIs (Spark는 Scala, Python, Java 사용)
@@ -294,7 +294,7 @@ Spark core는 fault-tolerant하고 performs large scale parallel and distributed
 
 ##### scaling big data in Spark
 
-![scaling_spark](C:\SJL\스터디_분산ML_system\Spark_scaling_bigdata.PNG)
+![scaling_spark](https://raw.githubusercontent.com/miscaminos/miscaminos.github.io/master/static/img/_posts/Spark_scaling_bigdata.PNG)
 
 Spark application은 driver program과 executor program으로 크게 나뉜다. 
 
