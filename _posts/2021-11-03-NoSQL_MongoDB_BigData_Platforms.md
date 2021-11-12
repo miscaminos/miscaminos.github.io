@@ -282,7 +282,7 @@ important things to consider:
 
 ### ACID vs BASE
 
-![acid_base](C:\SJL\스터디\acid_base.PNG)
+![acid_base](https://raw.githubusercontent.com/miscaminos/miscaminos.github.io/master/static/img/_posts/acid_base.PNG)
 
 *ACID: Atomicity, Consistency, Isolation, Durability <-RDBMS*
 
@@ -350,7 +350,7 @@ In distributed systems, partition can't be avoided, so partition tolerance is a 
 
 CAP theorem can be used to classify NoSQL databases. NoSQL databases choose between availability and consistency. and partition tolerance is a basic feature of NoSQL databases. Each NoSQL database has more weight on particular attribute(e.g., Apache Cassandra's primary functionalities are more towards availability, but doesn't mean Cassandra serves availability only. It means Apache Cassandra's primary attribute for the design and functionalities are closer to availability than consistencu)
 
-![CAP_theorem](C:\SJL\스터디\CAP_theorem.PNG)
+![CAP_theorem](https://raw.githubusercontent.com/miscaminos/miscaminos.github.io/master/static/img/_posts/CAP_theorem.PNG)
 
 
 
