@@ -502,7 +502,46 @@ Bounded asynchronous 방식으로 지정된 제한(threshold)까지만 asynchron
 
 **단점**- 어떤 parameter를 선택해야 update가 significant한지 아닌지를 구분하기가 어렵다.  
 
+##### SSP(Stale Synchronous Parallel)
 
+programming interface는 BSP와 비슷하다. 동작 방식은 다음과 같다:
+
+P개의 parallel worker들이 update과 aggregation과 같은 ML computation을 iterative하게 수행하는데, 각 iteration의 끝에서 SSP worker가 본인의 일은 끝났다고 signal을 보인다. 이때 BSP라면 sychronization barrier가 enact되어서 inter communication이 수행되겠지만, SSP에서는 이 barrier를 enact하는것 대신에 worker들을 각자 상황에 따라서 stop하거나 proceed하도록 허락한다. SSP will stop a worker if it is more than s iterations ahead of any other worker, where s=staleness threshold.
+
+특정 횟수의 iteration 동안에는 더 빠른 worker들이 먼저 진행나아갈 수 있도록 허용하여 synchronization overhead를 완화한다. 이 특정 횟수를 넘기면, worker들 모두 쉬어야한다. Worker들이 data의 cached version으로 operate하고 각 작업 사이클(task cycle)의 끝에서 변경점들을 commit하기 때문에, 다른 worker들이 오래된(stale) data로 operate하게 된다. 
+
+(Every worker machine keeps an  iteration counter t, and a local view of the model parameters A. SSP worker machines “commit” their updates Δ, and then invoke  a “clock()” function that: 
+
+① signals that their iteration has ended,  
+
+② increments their iteration counter t, and 
+
+③ informs the SSP  system to start communicating Δ to other machines, so they can update their local views of A. 
+
+This clock() is analogous to BSP’s  synchronization barrier, but is different in that updates from one  worker do not need to be immediately communicated to other  workers—as a consequence, workers may proceed even if they  have only received a partial subset of the updates. This means that the local views of A can become stale, if some updates have not been received yet.)
+
+![SSP](https://raw.githubusercontent.com/miscaminos/miscaminos.github.io/master/static/img/_posts/SSP.PNG)
+
+SSP를 구현할때에 다음과 같은 bounded staleness condition들이 존재한다:
+
+- bounded clock difference
+- timestamped updates
+- model state guarantees
+- read-my-writes
+
+**장점**- SSP는 any pair of workers사이의 maximum staleness를 threshold s로 제한하기때문에, data parallel 또는 model parallel방식에서 모두 strong theoretical model convergence가 guarantee된다.
+
+**단점**- staleness가 너무 높아지면(slow down하는 machine의 비중이 너무 커지는 경우 발생), convergence rate이 빠르게 deteriorate한다. 
+
+SSP 방식으로 운영되는 ML program(data parallel & model parallel 방식 모두)은 다음과 같은 두 개의 complementary theorem을 기반으로 near-ideal convergence progress per iteration을 확보할 수 있다.
+
+###### SSP data parallel convergence theorem:
+
+BSP와 동일하게 correctness가 보장된다. 그러나 현실에서 적용할때에는 staleness와 asynchrony를 최소로 유지하는것이 매우 중요하다. complex production environment에서는 other tasks나 user등으로 인해 machine이 temporarily slow down할 수 있고 maximum staleness와 staleness variance가 너무 커져버리는 문제가 발생할 수 있다.
+
+###### SSP model parallel asymptotic consistency:
+
+global view of parameter A가 결국 converge될것이고, stale local worker view of parameter또한 global view A로 converge될것이다라는 것을 말한다. 그리고 이렇게 converge된 값이 optimal solution이 될것이다라는 것을 이야기한다.
 
 ## Distributed Machine Learning 환경/Ecosystem
 
