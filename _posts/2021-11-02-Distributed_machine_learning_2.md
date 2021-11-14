@@ -6,7 +6,6 @@ categories: [machineLearning]   # (custom) some categories, but makesure these c
 tags: [DistributedML]           	# (custom) tags only for meta `property="article:tag"`
 
 
-
 ---
 
 
@@ -876,22 +875,9 @@ communication cost - federated optimization에서는 computation 보다는 commu
 - increased computation on each client: rather than performing a simple computation like a gradient calculation, each client perform a more complex calculation between each communication rounds
 
 ## References
-@misc{verbraeken2019survey,
-      title={A Survey on Distributed Machine Learning}, 
-      author={Joost Verbraeken and Matthijs Wolting and Jonathan Katzy and Jeroen Kloppenburg and Tim Verbelen and Jan S. Rellermeyer},
-      year={2019},
-      eprint={1912.09789},
-      archivePrefix={arXiv},
-      primaryClass={cs.LG}
-}
-
-@misc{xing2015strategies,
-      title={Strategies and Principles of Distributed Machine Learning on Big Data}, 
-      author={Eric P. Xing and Qirong Ho and Pengtao Xie and Wei Dai},
-      year={2015},
-      eprint={1512.09295},
-      archivePrefix={arXiv},
-      primaryClass={stat.ML}
-}
-
-https://federated.withgoogle.com/
+1. Verbraeken,Joost et al. A Survey on Distributed Machine Learning. 2019
+2. Xing, Eric P. et al. Strategies and Principles of Distributed Machine Learning on Big Data. 2015
+3. https://federated.withgoogle.com/
+4. https://blog.openmined.org/federated-learning-types/
+5. https://towardsdatascience.com/scalable-machine-learning-with-spark-807825699476
+6. https://www.youtube.com/watch?v=eVvjbTZc1CM
