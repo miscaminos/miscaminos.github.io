@@ -282,26 +282,23 @@ performance metrics
 
       SLURM script:
 
-```
-#!/bin/bash
-#SBATCH --job-name horovod1
-#SBATCH -D .
-#SBATCH --output hvd_1_%j.output
-#SBATCH --error hvd_1_%j.err
-#SBATCH --nodes=1
-#SBATCH --gres='gpu:4'
-#SBATCH --ntasks-per-node=4
-#SBATCH --cpus-per-task 40
-#SBATCH --time 00:25:00
+        ```
+        #!/bin/bash
+        #SBATCH --job-name horovod1
+        #SBATCH -D .
+        #SBATCH --output hvd_1_%j.output
+        #SBATCH --error hvd_1_%j.err
+        #SBATCH --nodes=1
+        #SBATCH --gres='gpu:4'
+        #SBATCH --ntasks-per-node=4
+        #SBATCH --cpus-per-task 40
+        #SBATCH --time 00:25:00
 
-module purge; module load gcc/8.3.0 cuda/10.2 cudnn/7.6.4 nccl/2.4.8 tensorrt/6.0.1 openmpi/4.0.1 atlas/3.10.3 scalapack/2.0.2 fftw/3.3.8 szip/2.1.1 ffmpeg/4.2.1 opencv/4.1.1 python/3.7.4_ML
+        module purge; module load gcc/8.3.0 cuda/10.2 cudnn/7.6.4 nccl/2.4.8 tensorrt/6.0.1 openmpi/4.0.1 atlas/3.10.3 scalapack/2.0.2 fftw/3.3.8 szip/2.1.1 ffmpeg/4.2.1 opencv/4.1.1 python/3.7.4_ML
 
-horovodrun -np $SLURM_NTASKS -H localhost:$SLURM_NTASKS --gloo \
-python3.7 tf2_keras_cifar_hvd.py --epochs 10 --batch_size 512
-```
+        horovodrun -np $SLURM_NTASKS -H localhost:$SLURM_NTASKS --gloo \
+        python3.7 tf2_keras_cifar_hvd.py --epochs 10 --batch_size 512
+        ```
 
-5. implement TensorFlow with Horovod  (without SLURM)
-
-   <참고 link https://eng.uber.com/horovod/ 
-
-   https://github.com/horovod/horovod>
+##Reference
+Zhang Kuo, et al. A Comparison of Distributed Machine Learning Platforms. Conference Paper. 2017 
