@@ -51,7 +51,7 @@ MXNet is a dataflow system that allows cyclic computation graphs with mutable st
 
 platform comparison experiment done by SUNY Buffalo - Logistic Regression과 MNIST image 분류 문제를 4개의 platform(Spark, PMLSTensorFlow, MXNet)에서 performance를 측정함 
 
-commonly 사용 환경 - All of our experiments are conducted in Amazon EC2 cloud computing platform using m4.xlarge instances. Each instance contains 4 vCPU powered by Intel Xeon E5-2676 v3 processor and 16GiB RAM. The dedicated EBS Bandwidth of m4.xlarge instance is 750Mbps.
+commonly 사용 환경 - All of our experiments are conducted in Amazon EC2 cloud computing platform using m4.xlarge instances. Each instance contains 4 vCPU powered by Intel Xeon E5-2676 v3 processor and 16GiB RAM. The dedicated EBS Bandwidth of m4.xlarge instance is 750Mbps.
 
 platform들이 release한 code를 사용하고, same setting, hyperparameters(e.g., learning rate, optimizer, activation function, number of units in the layer, etc)를 사용함 
 
@@ -150,33 +150,208 @@ By adopting symbolic execution graphs, they abstract away from the distributed e
 
 ### Multiprocessing (Python package)
 
-threading module과 비슷하게 processes를 spawn할 수 있도록, local and remote concurrency를 제공한다. (effectively side-stepping the Global Interpreter Lock(GIL) by using subprocesses instead of threads) 
+Tools to process more than one task simultaneously range over a spectrum with one end that has tools like OpenMPI, Python multiprocessing, ZeroMQ and the other end that has domain-specific tools like TensorFlow(for model training), Spark (for data processing and SQL), and Flink(for stream processing) - https://towardsdatascience.com/modern-parallel-and-distributed-python-a-quick-tutorial-on-ray-99f8d70369b8
+
+[Python multiprocessing](https://docs.python.org/3/library/multiprocessing.html) offers one solution to this, providing a set of convenient APIs that enable Python programs to take advantage of multiple cores on a single machine. (However, while this may help an application scale 10x or maybe even 50x, it’s still limited to the parallelism of a single machine and going beyond that would require rethinking and rewriting the application.)
+
+Python의 multiprocessing package는 threading module과 비슷하게 processes를 spawn한다. Effectively side-stepping the Global Interpreter Lock(GIL) by using subprocesses instead of threads, 이 library는 local and remote concurrency를 제공한다.
 
 The [`multiprocessing`](https://docs.python.org/2/library/multiprocessing.html#module-multiprocessing) module also introduces APIs which do not have analogs in the [`threading`](https://docs.python.org/2/library/threading.html#module-threading) module. A prime example of this is the `Pool` object which offers a convenient means of parallelizing the execution of a function across multiple input values, distributing the input data across processes (data parallelism). The following example demonstrates the common practice of defining such functions in a module so that child processes can successfully import that module. 
 
+*Pool* class is a better way to deploy Multi-Processing because it distributes the tasks to available processors using the First In First Out schedule. It is almost similar to the map-reduce architecture- in essence, it maps the input to different processors and collects the output from all processors as a list. The processes in execution are stored in memory and other non-executing processes are stored out of memory.
 
-
-This basic example of data parallelism using `Pool`,
-
-```python
-from multiprocessing import Pool
-
-def f(x):
-    return x*x
-
-if __name__ == '__main__':
-    p = Pool(5)
-    print(p.map(f, [1, 2, 3]))
-```
-
-will print to standard output [1,4,9]. Pool이외에도 Process, Lock, Value, Array와 같은 class들이 있다.
+Multiprocessing에는 Pool, Process, Lock, Value, Array와 같은 class들이 있다. 
 
 https://docs.python.org/2/library/multiprocessing.html
 
-Tools to process more than one task simultaneously range over a spectrum with one end that has tools like OpenMPI, Python multiprocessing, ZeroMQ and the other end that has domain-specific tools like TensorFlow(for model training), Spark (for data processing and SQL), and Flink(for stream processing) - https://towardsdatascience.com/modern-parallel-and-distributed-python-a-quick-tutorial-on-ray-99f8d70369b8
+예시:
 
-another example at Kaggle: https://www.kaggle.com/artyomp/resnet50-baseline/script
+multiprocessing library를 활용하여 다음 그림과 결과와 같이 동시에 'sleepy_man' function이 실행된다.
 
+```Python
+import multiprocessing
+import time
+
+def sleepy_man():
+    print('Starting to sleep')
+    time.sleep(1)
+    print('Done sleeping')
+
+tic = time.time()
+p1 =  multiprocessing.Process(target= sleepy_man)
+p2 =  multiprocessing.Process(target= sleepy_man)
+p1.start()
+p2.start()
+toc = time.time()
+
+print('Done in {:.4f} seconds'.format(toc-tic))
+```
+
+결과:
+
+```
+Done in 0.0023 seconds
+Starting to sleep
+Starting to sleep
+Done sleeping
+Done sleeping
+```
+
+
+```Python
+import multiprocessing
+import time
+
+def sleepy_man():
+    print('Starting to sleep')
+    time.sleep(1)
+    print('Done sleeping')
+
+tic = time.time()
+p1 =  multiprocessing.Process(target= sleepy_man)
+p2 =  multiprocessing.Process(target= sleepy_man)
+p1.start()
+p2.start()
+p1.join()
+p2.join()
+toc = time.time()
+
+print('Done in {:.4f} seconds'.format(toc-tic))
+```
+
+결과:
+
+```
+Starting to sleep
+Starting to sleep
+Done sleeping
+Done sleeping
+Done in 1.0090 seconds
+```
+
+다음 예시들을 보면 multiprocessing API들을 통해 " Perfect number"를 찾는 computation의 속도가 점점 더 향상되는것을 확인할 수 있다.
+
+for-loop 사용시,
+
+```python
+import time
+
+def is_perfect(n):
+    sum_factors = 0
+    for i in range(1, n):
+        if (n % i == 0):
+            sum_factors = sum_factors + i
+    if (sum_factors == n):
+        print('{} is a Perfect number'.format(n))
+
+tic = time.time()
+for n in range(1,100000):
+    is_perfect(n)
+toc = time.time()
+
+print('Done in {:.4f} seconds'.format(toc-tic))
+```
+
+```
+6 is a Perfect number
+28 is a Perfect number
+496 is a Perfect number
+8128 is a Perfect number
+Done in 258.8744 seconds
+```
+
+
+
+Process 사용시,
+
+```python
+import time
+import multiprocessing
+
+def is_perfect(n):
+    sum_factors = 0
+    for i in range(1, n):
+        if(n % i == 0):
+            sum_factors = sum_factors + i
+    if (sum_factors == n):
+        print('{} is a Perfect number'.format(n))
+
+tic = time.time()
+
+processes = []
+for i in range(1,100000):
+    p = multiprocessing.Process(target=is_perfect, args=(i,))
+    processes.append(p)
+    p.start()
+
+for process in processes:
+    process.join()
+
+toc = time.time()
+print('Done in {:.4f} seconds'.format(toc-tic))
+```
+
+```
+6 is a Perfect number
+28 is a Perfect number
+496 is a Perfect number
+8128 is a Perfect number
+Done in 143.5928 seconds
+```
+
+
+
+Pool 사용시,
+
+```python
+import time
+import multiprocessing
+
+def is_perfect(n):
+    sum_factors = 0
+    for i in range(1, n):
+        if(n % i == 0):
+            sum_factors = sum_factors + i
+    if (sum_factors == n):
+        print('{} is a Perfect number'.format(n))
+
+tic = time.time()
+pool = multiprocessing.Pool()
+pool.map(is_perfect, range(1,100000))
+pool.close()
+toc = time.time()
+
+print('Done in {:.4f} seconds'.format(toc-tic))
+```
+
+```
+6 is a Perfect number
+28 is a Perfect number
+496 is a Perfect number
+8128 is a Perfect number
+Done in 74.2217 seconds
+```
+
+Pool class사용시, 기존 for-loop을 사용할때 보다 71%수준의 computation time reduction이 가능하다.
+
+Python multiprocessing을 사용하는 demonstration은 Ray와 함께 진행했다. (나중에 Ray 부분에서 나올 예정)
+
+
+
+이 보다 훨씬 더 복잡한 ResNet50와 같은 모델을 구동하는데에도 multiprocessing이 사용될 수 있다. 
+
+muchhhh more complex example at Kaggle for Google Landmark Recognition competition 2019: https://www.kaggle.com/artyomp/resnet50-baseline/script
+
+
+
+그러나 multiprocessing module는 다음과 같이 modern application에 필수적인 요소들을 충족하지 못한다:
+
+- Running the same code on more than one machine. (?)
+- Building [microservices](https://en.wikipedia.org/wiki/Microservices) and [actors](https://en.wikipedia.org/wiki/Actor_model) that have state and can communicate.
+- Gracefully handling [machine failures](https://en.wikipedia.org/wiki/Fault_tolerance).
+- Efficiently handling [large objects and numerical data](https://ray-project.github.io/2017/10/15/fast-python-serialization-with-ray-and-arrow.html).
+
+이점들을 cover하기위해 Ray framework이 사용될 수 있다.
 
 
 ### Horovod (w/ TensorFlow) --> DL
