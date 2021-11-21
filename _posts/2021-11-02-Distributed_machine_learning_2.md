@@ -30,6 +30,11 @@ Distributed Machine Learning
 
 2016- TPU (Tensor Processing Unit)
 
+2017- Federated Learning, Horovod
+
+2018- Ray
+
+
 
 
 ### Distributed Machine Learning이란?
@@ -226,7 +231,7 @@ Distributed machine learning system에는 두 가지 병렬 방식이 존재한�
 
 Data parallelism은 적용하기 더 쉽고 다양한 cases에 적합한 방식이다. IID (independent and identically distributed) 한 dataset을 다루는 machine learning의 경우에는 포괄적으로 data parallelism을 적용할 수 있다. 
 
-Data set을 partition으로 나누어서 진행하는 방식이다. Compute cluster에서 사용할 수 있는 worker nodes의 개수만큼  data를 partition한다. Model이 각각의 worker node에 복사되고, 각 worker가 본인의 data subset을 처리한다. (Each worker node operates on its own subset of the data.) 각 worker node는 훈련하는 model을 지원 할 수 있는 capacity를 가지고 있어야한다. 즉, 하나의 node에 model 전체가 fit될 수 있어야 하는 것이다.  
+Data set을 partition으로 나누어서 진행하는 방식이다. Compute cluster에서 사용할 수 있는 worker nodes의 개수만큼  data를 partition한다. Model이 각각의 worker node에 복사되고, 각 worker가 본인의 data subset을 처리한다. (Each worker node operates on its own subset of the data.) 각 worker node는 훈련하는 model을 지원 할 수 있는 capacity를 가지고 있어야한다. **즉, 하나의 node에 model 전체가 fit될 수 있어야 하는 것이다.**  
 
 각 node는 본인이 training sample에 대해 예측한 값과 labeled outputs간의 에러값을 독립적으로 계산한다. 그리고 각 node의 에러값을 기반으로 model을 update시키고 이런 변경사항들을 다른 nodes들에게 모두 공유해서 nodes들 각각이 corresponding하는 모델을 update할 수 있도록해야한다. 
 
@@ -273,7 +278,7 @@ Model parallelism에서는 worker node들이 공유된 parameter만 synchronize�
 
 Model parallelism을 쉽게 그림으로 표현한 diagram은 다음과 같다.
 
-Model의 layer (또는 group of layers)가 각각의 node에 deploy되고, data는 전체 data set이 각 node에 copy된다. 즉, model의 부분적인 layer를 받은 각각의 node가 전체 dataset으로 훈련된다. 
+Model의 layer (또는 group of layers)가 각각의 node에 deploy되고, data는 전체 data set이 각 node에 copy된다. **즉, model의 부분적인 layer를 받은 각각의 node가 전체 dataset으로 훈련된다.** 
 
 ![model_parallelism](https://raw.githubusercontent.com/miscaminos/miscaminos.github.io/master/static/img/_posts/model_parallelism_tds.PNG)
 
@@ -473,33 +478,12 @@ consistency를 보장하는 가장 심플한 model이다. 각각의 computation�
 
 **단점**- 느리다. BSP는 iteration throughput이 낮다고 표현하는데, 이것은 P개의 machine들이 P-fold increase in throughput을 확보하지 못한다는 것이다. Every synchronization barrier에서 먼저 완료된 worker은 모든 다른 worker들이 완료될때까지 기다려야 한다. 이런 문제는 몇 worker들이 progress가 늦은 경우에 overhead를 발생 시킬 수 있다. 특히 예측할 수 없는 현실적인 문제(temperature fluctuation in datacenter, network congestion, background tasks, etc)로 인해 특정 machine이 cluster내의 나머지 machine들보다 느려서 well balanced workloads가 확보되었어도 program 전체의 효율이 slowest machine과 match되도록 떨어지는 문제가 발생한다. Machine들간의 communication이 instantaneous하지 않기때문에 synchronization 자체가 시간을 많이 소모할 수 있다. 
 
+Spark과 Hadoop의 구성과 동작 방식에 관한 더 상세한 내용: 
 
+Hadoop & MapReduce: https://phoenixnap.com/kb/hadoop-mapreduce
 
-##### Asynchronous parallel 
+Spark: https://www.analyticsvidhya.com/blog/2021/08/understand-the-internal-working-of-apache-spark/
 
-BSP와는 다르게 worker machine이 다른 machine들을 기다려주지 않는다. 각 iteration마다 model information을 communicate한다. Asynchronous execution은 보통 near-ideal P-fold increase in iteration throughput을 확보하지만, convergence progress per iteration은 감소한다. 이 방식에서는 machine들이 서로를 기다려주지 않기때문에 공유되는 model information이 delay되거나 stale되어서 computation에 error을 발생시키는 문제가 발생한다. 이 error를 제한하기위해 delays는 정교하게 bound되어야한다. 
-
-![Asynchronous](https://raw.githubusercontent.com/miscaminos/miscaminos.github.io/master/static/img/_posts/ASP.PNG)
-
-**장점:** 속도. 빠르다. worker들이 기다림 없이 병렬로 communicate할 수 있다. 이 방식으로 가장 빠른 speedup을 얻을 수 있다는 것이 장점이다.
-
-**단점:** staleness, incorrect result (due to risk that one machine could end up many iterations slower than the others, leading to unrecoverable error in ML programs).
-
-Model convergence가 느리게 확보될수있는 risk가 있다. Model이 아얘 incorrect하게 develop될 수도 있다. BSP나 SSP와는 다르게 error가 delay와 함께 커질 수 있다. model이 느리게 converge하거나 BSP, SSP와는 다르게 error가 delay와 함께 커져서 model이 부정확하게(incorrectly) develop될 수도 있다는것이다. 
-
-
-
-BAP(Barrierless Asynchronous Parallel)/ TAP(Total Asynchronous Parallel)로 세분화 할 수 있다. 이 방식에서는 기다림 없이 worker machine들이 바로 서로 병렬로 communicate한다. 
-
-
-
-##### ASP(Approximate Synchronous Parallel)
-
-Bounded asynchronous 방식으로 지정된 제한(threshold)까지만 asynchronous 방식으로 진행되는  SSP(stale synchronous parallel)라는 방식이있다. SSP는 BSP가 더 포괄적이게 개선된 버젼으로 생각하면 된다. ASP는 SSP와는 반대로 parameter가 얼마나 inaccurate될 수 있는지를 제한하는 방식이다. (Parameter가 얼마나 (inaccurate)부정확해질 수 있는지를 제한한다. 이 점은 parameter가 얼마나 stale해지는지 제한하는 SSP와는 반대이다.) 이 방식에서는 만약 aggregated update가 중요한 수준이 아니라면(is insignificant), synchronization을 무한으로 연기할 수도 있다. 단지, 어떤 parameter를 선택해서 update가 insignificant한지/아닌지를 올바르게 판단하는 것이 어렵다.
-
-**장점**- 축적된 update가 insignificant할때에 server가 synchronization을 무기한으로 연기할 수 있다.
-
-**단점**- 어떤 parameter를 선택해야 update가 significant한지 아닌지를 구분하기가 어렵다.  
 
 ##### SSP(Stale Synchronous Parallel)
 
@@ -541,6 +525,33 @@ BSP와 동일하게 correctness가 보장된다. 그러나 현실에서 적용�
 ###### SSP model parallel asymptotic consistency:
 
 global view of parameter A가 결국 converge될것이고, stale local worker view of parameter또한 global view A로 converge될것이다라는 것을 말한다. 그리고 이렇게 converge된 값이 optimal solution이 될것이다라는 것을 이야기한다.
+
+
+
+##### ASP(Approximate Synchronous Parallel)
+
+Bounded asynchronous 방식으로 지정된 제한(threshold)까지만 asynchronous 방식으로 진행되는  SSP(stale synchronous parallel)라는 방식이있다. SSP는 BSP가 더 포괄적이게 개선된 버젼으로 생각하면 된다. ASP는 SSP와는 반대로 parameter가 얼마나 inaccurate될 수 있는지를 제한하는 방식이다. (Parameter가 얼마나 (inaccurate)부정확해질 수 있는지를 제한한다. 이 점은 parameter가 얼마나 stale해지는지 제한하는 SSP와는 반대이다.) 이 방식에서는 만약 aggregated update가 중요한 수준이 아니라면(is insignificant), synchronization을 무한으로 연기할 수도 있다. 단지, 어떤 parameter를 선택해서 update가 insignificant한지/아닌지를 올바르게 판단하는 것이 어렵다.
+
+**장점**- 축적된 update가 insignificant할때에 server가 synchronization을 무기한으로 연기할 수 있다.
+
+**단점**- 어떤 parameter를 선택해야 update가 significant한지 아닌지를 구분하기가 어렵다.  
+
+
+##### Asynchronous parallel 
+
+BSP와는 다르게 worker machine이 다른 machine들을 기다려주지 않는다. 각 iteration마다 model information을 communicate한다. Asynchronous execution은 보통 near-ideal P-fold increase in iteration throughput을 확보하지만, convergence progress per iteration은 감소한다. 이 방식에서는 machine들이 서로를 기다려주지 않기때문에 공유되는 model information이 delay되거나 stale되어서 computation에 error을 발생시키는 문제가 발생한다. 이 error를 제한하기위해 delays는 정교하게 bound되어야한다. 
+
+![Asynchronous](https://raw.githubusercontent.com/miscaminos/miscaminos.github.io/master/static/img/_posts/ASP.PNG)
+
+**장점:** 속도. 빠르다. worker들이 기다림 없이 병렬로 communicate할 수 있다. 이 방식으로 가장 빠른 speedup을 얻을 수 있다는 것이 장점이다.
+
+**단점:** staleness, incorrect result (due to risk that one machine could end up many iterations slower than the others, leading to unrecoverable error in ML programs).
+
+Model convergence가 느리게 확보될수있는 risk가 있다. Model이 아얘 incorrect하게 develop될 수도 있다. BSP나 SSP와는 다르게 error가 delay와 함께 커질 수 있다. model이 느리게 converge하거나 BSP, SSP와는 다르게 error가 delay와 함께 커져서 model이 부정확하게(incorrectly) develop될 수도 있다는것이다. 
+
+
+BAP(Barrierless Asynchronous Parallel)/ TAP(Total Asynchronous Parallel)로 세분화 할 수 있다. 이 방식에서는 기다림 없이 worker machine들이 바로 서로 병렬로 communicate한다. 
+
 
 ## Distributed Machine Learning 환경/Ecosystem
 
