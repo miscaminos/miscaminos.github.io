@@ -24,7 +24,7 @@ Nodes distribution scheme은 크게 두 가지 방식으로 구분된다.
 
 아래 그림은 parallel SGD(in data parallelism) 가 parameter server를 사용할때에 algorithm이 workers(servers)에게 model을 broadcast하는 단계부터 시작한다. Each worker reads its own split from the mini-batch in each training iteration, computing its own gradients, and sending those gradients to one or more parameter servers. The parameter servers aggregate all the gradients from the workers and wait until all workers have completed before they calculate the new model for the next iteration, which is then broadcasted to all workers.
 
-![centralized](C:\SJL\스터디_분산ML_system\figures\centralized.png)
+![centralized](https://raw.githubusercontent.com/miscaminos/miscaminos.github.io/master/static/img/_posts/centralized.png)
 
 ### Decentralized
 
@@ -32,7 +32,7 @@ De-centralized 방식으로는 각각의 node가 다른 모든 node들과 직접
 
 parallel SGD(in data parallelism)의 경우 다음 그림과 같이 decentralized scheme을 사용한다. 이때 ring-allreduce방식에 의존하여 nodes들간의 parameter updates를 communicate한다. ring-allreduce architecture에는 workers로 부터 gradients를 aggregate하는 central server가 부재인 대신에, 각 training iteration에서 each worker read its own split for a mini-batch, calculates its gradients, sends it gradients to its successor neighbor on the ring, and receives gradients from its predecessor neighbor on the ring.
 
-![decentralized](C:\SJL\스터디_분산ML_system\figures\decentralized.png)
+![decentralized](https://raw.githubusercontent.com/miscaminos/miscaminos.github.io/master/static/img/_posts/decentralized.png)
 
 Decentralized scheme으로 centralized scheme대비 performance를 향상시킨 cases:
 
@@ -50,7 +50,7 @@ ML deployment를 설계하는데에 주요 요소 중 하나는 cluster안에 co
 
 Node간의 communication과 parameter updates 방식으로 distribution의 degree(수준)을 설정한다. 다음과 같이 4단계의 degrees of distribution으로 구분할 수 있다: centralized (ensembling), decentralized as tree, decentralized with parameter server, fully distributed.
 
-![topology](C:\SJL\스터디_분산ML_system\figures\Distributed_ML_topologies.PNG)
+![topology](https://raw.githubusercontent.com/miscaminos/miscaminos.github.io/master/static/img/_posts/Distributed_ML_topologies.PNG)
 
 Degree of distribution:
 
@@ -158,7 +158,7 @@ parallel programs에서는 worker machine들 간의 exchange program이 요구�
 
 BSP방식은 다음 그림과 같이 computation과 communication phase사이의 clean separation을 형성한다. BSP 방식에서는 worker machine들에게 다음 synchronization에 도달하기 전까지는 각 machine의 computation phase가 보이지 않는다. 
 
- <img src="C:\SJL\스터디_분산ML_system\figures\BSP.PNG" alt="BSP" style="zoom: 50%;" />
+ <img src="https://raw.githubusercontent.com/miscaminos/miscaminos.github.io/master/static/img/_posts/BSP.PNG" alt="BSP" style="zoom: 50%;" />
 
 BSP방식을 따르는 ML program들은 serializable하다. 즉, sequential ML program과 동일하다는 것을 의미한다. serializable BSP ML program들은 correctness가 guarantee되어있다. 
 
@@ -190,7 +190,7 @@ P개의 parallel worker들이 update과 aggregation과 같은 ML computation을 
 
 This clock() is analogous to BSP’s  synchronization barrier, but is different in that updates from one  worker do not need to be immediately communicated to other  workers—as a consequence, workers may proceed even if they  have only received a partial subset of the updates. This means that the local views of A can become stale, if some updates have not been received yet.)
 
-<img src="C:\SJL\스터디_분산ML_system\figures\SSP.PNG" alt="SSP" style="zoom: 50%;" />
+<img src="https://raw.githubusercontent.com/miscaminos/miscaminos.github.io/master/static/img/_posts/SSP.PNG" alt="SSP" style="zoom: 50%;" />
 
 SSP를 구현할때에 다음과 같은 bounded staleness condition들이 존재한다:
 
@@ -231,7 +231,7 @@ ASP는 SSP와는 반대로 parameter가 얼마나 inaccurate될 수 있는지를
 
 BSP와는 다르게 worker machine이 다른 machine들을 기다려주지 않는다. 각 iteration마다 model information을 communicate한다. Asynchronous execution은 보통 near-ideal P-fold increase in iteration throughput을 확보하지만, convergence progress per iteration은 감소한다. 이 방식에서는 machine들이 서로를 기다려주지 않기때문에 공유되는 model information이 delay되거나 stale되어서 computation에 error을 발생시키는 문제가 발생한다. 이 error를 제한하기위해 delays는 정교하게 bound되어야한다. 
 
-<img src="C:\SJL\스터디_분산ML_system\figures\ASP.PNG" alt="Asynchronous" style="zoom: 50%;" />
+<img src="https://raw.githubusercontent.com/miscaminos/miscaminos.github.io/master/static/img/_posts/ASP.PNG" alt="Asynchronous" style="zoom: 50%;" />
 
 **장점:** 속도가 빠르다. worker들이 기다림 없이 병렬로 communicate할 수 있다. 이 방식으로 가장 빠른 speedup을 얻을 수 있다는 것이 장점이다.
 
@@ -249,7 +249,7 @@ BAP(Barrierless Asynchronous Parallel)/ TAP(Total Asynchronous Parallel)로 세�
 
 LSGD partitions computing resources into subgroups that each contain a communication layer (communicator) and a computation layer (worker). Each subgroup has centralized communication for parameter updates while communication between subgroups is handled by communicators. As a result, communication time is overlapped with I/O latency of workers. The efficiency of the algorithm is tested by training a deep network on the ImageNet classification task.
 
-![LSGD_topology](C:\SJL\스터디_분산ML_system\figures\LSGD_topology.png)
+![LSGD_topology](https://raw.githubusercontent.com/miscaminos/miscaminos.github.io/master/static/img/_posts/LSGD_topology.png)
 
 
 
@@ -261,7 +261,7 @@ General purpose와는 반대의 방향에는 purpose-built machine learning libr
 
 아얘 처음부터 distributed machine learning을 위해 설계되고 만들어진 specific algorithm과 operational model이 distributed ML ecosystem의 중심에 있다. e.g., Distributed Ensemble Learning, Parallel Synchronous Stochastic Gradient Descent (SGD), 또는 Parameter Servers. 원래 대부분의 system들은 user 또는 on-premise로 운용(operate)되도록 의도되어왔으나, 점점 더 많고 다양한 machine learning services가 cloud delivery model을 통해 공급되고 있다. 이들은 established distributed machine learning system을 중심에 두고 surrounding platform으로 인해 개선되고있으며 해당 기술/technology가 data scientist나 결정권자들에게 더 쉽게 사용할 수 있도록 만들어가고 있다.
 
-![DistributedML_Ecosystem](C:\SJL\스터디_분산ML_system\figures\DistributedML_Ecosystem.PNG)
+![DistributedML_Ecosystem](https://raw.githubusercontent.com/miscaminos/miscaminos.github.io/master/static/img/_posts/DistributedML_Ecosystem.PNG)
 
 
 
@@ -303,7 +303,7 @@ User는 Map & Reduce function만 쓰면 된다. (단, 매번 Map-Reduce operatio
 
 
 
-<img src="C:\SJL\스터디_분산ML_system\figures\MapReduce_Map.PNG" alt="MapReduce_diagram" style="zoom:50%;" />
+<img src="https://raw.githubusercontent.com/miscaminos/miscaminos.github.io/master/static/img/_posts/MapReduce_Map.PNG" alt="MapReduce_diagram" style="zoom:50%;" />
 
 MapReduce의 가장 큰 장점은 이 framework을 통해서  data dependencies없이 그리고 전부 parallel(병렬)방식으로 동일 phase의 작업(tasks)을 수행 하는 동시에 아주 많은 machine들에게 data가 distribute될 수 있다는 것이다. 동일 machine들은 GFS (또는 비슷한 타 storage cluster)의 node가 될수 있어서 data를 program으로 이동시키는 것대신에 program을 data로 옮기고 data locality와 performance를 개선하는 방법이있다. Program은 wire선상에서 보통 several orders of magnitude 더 작기때문에 전달하기에 매우 효율적이다. 
 
@@ -325,7 +325,7 @@ Apache Spark는 **in-memory distributed data processing** 도구이다. ("in-mem
 
 note: parallel vs. distributed 차이점 - 이 두개의 terms can be used interchangeably, BUT! how they access memory is different. (parallel computing shares memory while distributed computing have their own memory)
 
-![parallel_vs_distributed](C:\SJL\스터디_분산ML_system\figures\parallel_vs_distributed.PNG)
+![parallel_vs_distributed](https://raw.githubusercontent.com/miscaminos/miscaminos.github.io/master/static/img/_posts/parallel_vs_distributed.PNG)
 
 Spark는 transformations의 directed acyclic graph를 실행하고(e.g., mapping) actions(e.g., reductions)를 memory에서 fully 실행하는 것이 가능하다. Spark의 구조때문에, complex workloads를 처리하는데에 **MapReduce보다 훨씬 더 빠르다.** 예를 들어서 만약 두개의 map phase들이 연달아서 필요한 경우가있다면, 두개의 MapReduce 작업이 필요해지고 이 둘은 모든 intermediate data를 disk에 써야한다. MapReduce대신 Spark를 사용하게되면, 모든 data를 memory에 유지할 수 있어서 disk로부터 읽는 expensive한 작업을 하지 않아도 된다. 
 
@@ -365,7 +365,7 @@ RDD dataset은 read-only이고 새로운 instance는 이미 존재하는 RDDs를
 
 Spark는 checkpointing을 허용해서 extensive re-computation을 방지한다. Checkpoint는 explicitly request되어야하고 intermediate state을 materialize하면서 RDD lineage graph를 truncate한다. TR-Spark(Microsoft가 만든 Spark version)와 같은 system들은 checkpoint를 생성하는 것이 자동화 되어있어서 interruption of execution이 norm으로 여겨지는 transient한 resources를 사용할 때에도 Spark가 운용될 수 있다.
 
-<img src="C:\SJL\스터디_분산ML_system\figures\Spark_RDD.png" alt="Spark_RDD" style="zoom:50%;" />
+<img src="https://raw.githubusercontent.com/miscaminos/miscaminos.github.io/master/static/img/_posts/Spark_RDD.png" alt="Spark_RDD" style="zoom:50%;" />
 
 Apache Spark는 MLlib를 포함한다. MLlib는 classification, regression, decision trees, clustering 그리고 topic modeling을 위해 여러가지 ML algorithm을 scalable machine learning library이다. MLlib는 ML workflow를 만들기위해서나, feature transformations, hyperparameter tuning을 위해서 여러가지 utilities를 제공한다. MLlib가 Spark의 API를 사용하기때문에 Spark의 scale-out과 failure resilience feature들을 바로 사용할 수 있게된다. MLlib는 Scala linear algebra package인 Breeze와 (Breeze는 최적화를 위해 netlib-java를 활용함) BLAS와 LAPACK와 같이 high performance computing에 사용되는 libraries을 위한 bridge에 의존한다. 
 
@@ -373,7 +373,7 @@ abstracted parallelization - 알아서 분산 processing을 처리한다. (data 
 
 Apache Spark core build:
 
-![Apache_Spark](C:\SJL\스터디_분산ML_system\figures\ApacheSpark_ecosystem.PNG)
+![Apache_Spark](https://raw.githubusercontent.com/miscaminos/miscaminos.github.io/master/static/img/_posts/ApacheSpark_ecosystem.PNG)
 
 
 
@@ -387,7 +387,7 @@ Mesos를 통해서 (Mesos= a distributed system kernel) Spark는 매 iteration�
 
 위 그림과 같이 Spark cluster는 a master and multiple worker로 구성되어있다. 
 
-<img src="C:\SJL\스터디_분산ML_system\figures\spark_architecture.PNG" alt="spark_architecture" style="zoom:67%;" />
+<img src="https://raw.githubusercontent.com/miscaminos/miscaminos.github.io/master/static/img/_posts/spark_architecture.PNG" alt="spark_architecture" style="zoom:67%;" />
 
 A master - responsible for negotiating resource requests made by the Spark driver program corresponding to the submitted Spark application. 
 
@@ -547,7 +547,7 @@ https://brunch.co.kr/@chris-song/96 (explanation in korean with diagram)
 
 다음 그림과 같이 ring-allreduce algorithm을 통해서 worker node들이 gradient들의 average를 구하고 parameter server를 통한 centralized scheme의 필요 없이 이들을 모든 node들에게 disperse한다. 
 
-![Horovod](C:\SJL\스터디_분산ML_system\figures\ring_allreduce.png)
+![Horovod](https://raw.githubusercontent.com/miscaminos/miscaminos.github.io/master/static/img/_posts/ring_allreduce.png)
 
 위와 같은 ring-allreduce algorithm에서는 N개의 node들이 각각 두 개의 peers와 2*(N-1)번 communicate한다. 이 communication을 하는 동안, 각 node가 chunks of data buffer를 send & receive한다. 첫 N-1 iterations에서는, 받은 value들이 node의 buffer에 있는 values들에 더해진다. 두번째 N-1 iterations에서는, node의 buffer에 hold된 value들을 received value들이 replace한다. 이 algorithm은 bandwidth-optimal하다. 즉, buffer가 적당하게 크다면 사용가능한 network을 최적의 조건으로 활용할 수 있다.
 
@@ -573,7 +573,7 @@ Horovod Timeline을 사용해서 training job동안 각 time step에서 각 node
 
 이 Horovod-focused profiling tool은 Chrome의 "about:tracing" trace event profiling viewer와 compatible하다. Users can enable timelines by setting a single environment variable and can view the profiling results in the browser through ```chrome://tracing```. 
 
-![HorovodTimeline](C:\SJL\스터디_분산ML_system\figures\HorovodTimeline.png)
+![HorovodTimeline](https://raw.githubusercontent.com/miscaminos/miscaminos.github.io/master/static/img/_posts/HorovodTimeline.png)
 
 
 
@@ -662,7 +662,7 @@ client의 request를 받은 master는 one or more workers로 job을 schedule하�
 
 (note: kernel의 정의 - implementation of an operation on a particular device)
 
-![tensorflow_software_layers](C:\SJL\스터디_분산ML_system\figures\TensorFlow_software_layers.PNG)
+![tensorflow_software_layers](https://raw.githubusercontent.com/miscaminos/miscaminos.github.io/master/static/img/_posts/TensorFlow_software_layers.PNG)
 
 만약 computation에 multiple device들이 involve되어있다면, node placement라는 procedure이 수행된다. TensorFlow는 cost model을 통해 available device(CPU, GPU)에서 an operation을 수행하는데에 필요한 cost를 계산해서 suitable device에 operation을 배정한다. (subject to implicit or explicit device constraints in the graph) TensorFlow는 여러가지 communication protocol을 지원한다. (gRPC over TCP, RDMA over Converged Ethernet)
 
@@ -670,7 +670,7 @@ TensorFlow는 sub-graph execution을 지원한다. graph 또는 subgraph를 실�
 
 TensorFlow에서 (PMLS에서와 같이)data parallel방식이 구현되면, training involved multiple tasks in a worker job training the same model on different mini-batches of data, updating shared parameters hosted in a one or more tasks in a ps(parameter server) job.
 
-![tensorflow_training_diagram](C:\SJL\스터디_분산ML_system\figures\TensorFlow_btwngraph_rep_training.PNG)
+![tensorflow_training_diagram](https://raw.githubusercontent.com/miscaminos/miscaminos.github.io/master/static/img/_posts/TensorFlow_btwngraph_rep_training.PNG)
 
 위 그림에서 보이는 것과 같이 "between-graph" replicated training에서는 각 worker task를 위해 separate client가 존재한다 (보통 within the same process as the worker task) 각 client가 parameter들의 담긴 비슷한 graph를 build하고(pinned to ps), single copy of  computation intensive part of computational graph(pinned to local task in the worker job)을 build한다. 
 
@@ -708,7 +708,7 @@ MXNet is a dataflow system that allows cyclic computation graphs with mutable st
 
 아래 그림과 같이, main components of MXNet. The runtime dependency engine analyzes the dependencies in computation processes and parallelizes the computations that are not dependent. On top of runtime dependency engine, MXNet has a middle layer for graph and memory optimization.
 
-![MXNet_composition](C:\SJL\스터디_분산ML_system\figures\MXNet_composition.PNG)
+![MXNet_composition](https://raw.githubusercontent.com/miscaminos/miscaminos.github.io/master/static/img/_posts/MXNet_composition.PNG)
 
 ##### Fault tolerance
 
@@ -734,7 +734,7 @@ https://bair.berkeley.edu/blog/2018/01/09/ray/
 
 **Relation to deep learning frameworks:** Ray is fully compatible with deep learning frameworks like TensorFlow, PyTorch, and MXNet, and it is natural to use one or more deep learning frameworks along with Ray in many applications (for example, our reinforcement learning libraries use TensorFlow and PyTorch heavily).
 
-![What is Ray](C:\SJL\스터디_분산ML_system\figures\what_is_ray.png)
+![What is Ray](https://raw.githubusercontent.com/miscaminos/miscaminos.github.io/master/static/img/_posts/what_is_ray.png)
 
 **Relation to other distributed systems:** Many popular distributed systems are used today, but most of them were not built with AI applications in mind and lack the required performance for supporting and the APIs for expressing AI applications. The following features are missing (in various combinations) from today’s distributed systems:
 
@@ -744,7 +744,7 @@ https://bair.berkeley.edu/blog/2018/01/09/ray/
 - Tasks operating on shared mutable state (e.g., neural net weights or a simulator)
 - Support for heterogeneous resources (CPUs, GPUs, etc)
 
-<img src="C:\SJL\스터디_분산ML_system\figures\ray.PNG" alt="ray" style="zoom:67%;" />
+<img src="https://raw.githubusercontent.com/miscaminos/miscaminos.github.io/master/static/img/_posts/ray.PNG" alt="ray" style="zoom:67%;" />
 
 https://docs.ray.io/en/ray-0.3.0/tutorial.html
 
@@ -783,7 +783,7 @@ Petuum은 HDFS과 YARN을 사용하는 system에서도 동작할 수 있도록 a
 
 **Petuum architecture:**
 
-![](C:\SJL\스터디_분산ML_system\figures\petuum_architecture.PNG)
+![](https://raw.githubusercontent.com/miscaminos/miscaminos.github.io/master/static/img/_posts/petuum_architecture.PNG)
 
 basic programming interface로 C++와 Java가 있다. (YARN과 Hadoop Distributed를 지원해서 Hadoop clusters로 바로 실행가능하도록 한다.)
 
@@ -811,7 +811,7 @@ worker process/thread가 up-to-date model parameter를 requesting하고 partitio
 
 parameter-server thread는 model parameter들을 update하고 store하며, worker들의 request에 응답하는 역할을 맡는다.
 
-![PMLS_architecture](C:\SJL\스터디_분산ML_system\figures\PMLS_architecture.PNG)
+![PMLS_architecture](https://raw.githubusercontent.com/miscaminos/miscaminos.github.io/master/static/img/_posts/PMLS_architecture.PNG)
 
 위 그림 설명:
 
