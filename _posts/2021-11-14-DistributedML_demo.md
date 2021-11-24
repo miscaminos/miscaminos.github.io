@@ -286,8 +286,28 @@ sources: https://medium.com/distributed-computing-with-ray/how-to-scale-python-m
 https://towardsdatascience.com/modern-parallel-and-distributed-python-a-quick-tutorial-on-ray-99f8d70369b8
 
 
+## Pytorch
+
+### DDP(Distributed Date Parallel)
+
+demonstration of data parallel 방식
+
+using MNIST data set for image classification, learning process distributed across 2 GPUs:
+
+tutorial: https://towardsdatascience.com/distributed-deep-learning-101-introduction-ebfc1bcd59d9
+
+step-by-step:
+
+1. copy the model on every GPU
+2. split the dataset and fit the models on different subsets
+3. communicate gradients at each iteration to keep the models in sync
+
 
 ## TensorFlow Distributed
+
+### MirroredStrategy
+
+TensorFlow의 distributed strategies중에 하나이다. Multiple hardware accelerator(GPU or TPU)들간에 heavy training workload를 분산하는 과정을 보다 쉽게 진행할 수 있다. 
 
 TensorFlow-Custom-Distributed -training-GPU (Plant Pathology 2021):https://www.kaggle.com/mohammadasimbluemoon/tensorflow-custom-distributed-training-gpu
 
